@@ -18,7 +18,7 @@ export const ContrastChecker = (props: { color: string}) => {
   let [error, setError] = useState<string>();
 
   useEffect(() => {
-    if (item.Hex) {
+    if (item.Hex && /^#([0-9A-F]{3}){1,2}$/i.test(item.Hex)) {
       fetch("/api/Checker", {
         "method": "POST",
         "headers": {
@@ -37,7 +37,7 @@ export const ContrastChecker = (props: { color: string}) => {
             setLoading(false);     
           }
           else {
-            throw 'Oops something wrong!';
+            throw 'Something wrong!';
           }
         } catch (e) {
           setError(e);  
@@ -50,14 +50,14 @@ export const ContrastChecker = (props: { color: string}) => {
       });
     }
     else {
-      setError('Oops something wrong!');  
+      setError('Something wrong!');  
     }
-  }, [item, loading, error]);
+  }, []);
   
   return (
     <Crad>
       <HeaderCrad css={{ backgroundColor: item.Hex }}>
-        <h3 title="colorName">{item.Hex}</h3>
+        <h3 title="nameColor">{item.Hex}</h3>
         <ul>
           <li className="dark">
             <p>Aa Bb Cc</p>
@@ -77,15 +77,15 @@ export const ContrastChecker = (props: { color: string}) => {
         <ul>
           <li>
             <label>HEX</label>
-            <p title="colorHex">{item.Hex}</p>
+            <p title="hexColor">{item.Hex}</p>
           </li>
           <li>
             <label>RGB</label>
-            <p title="colorRgb">{item.Rgb}</p>
+            <p title="rgbColor">{item.Rgb}</p>
           </li>
           <li>
             <label>CMYK</label>
-            <p title="colorCmyk">{item.Cmyk}</p>
+            <p title="cmykColor">{item.Cmyk}</p>
           </li>
           <li>
             <label>Pantone</label>
@@ -97,7 +97,7 @@ export const ContrastChecker = (props: { color: string}) => {
         loading && 
         <LoadingCard title="loading">
           {
-            !error ? <div id="loading"></div> : <p title="error">Oops something wrong!</p>
+            !error ? <div id="loading"></div> : <p title="error">Something wrong!</p>
           }
         </LoadingCard>
       }
