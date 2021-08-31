@@ -6,6 +6,7 @@ import { ContrastChecker } from "./ContrastChecker";
 import "@testing-library/jest-dom/extend-expect";
 
 const mockData = { 
+    name: "test"
     Hex: '#178DB3',
     Rgb: '023-141-179',
     Cmyk: '087-021-000-030',
@@ -20,22 +21,22 @@ global.fetch = jest.fn(() =>
 ) as jest.Mock;
 
 it("renders element with crashing", async () => {
-    await act( async () => render(<ContrastChecker color="@sddf4"></ContrastChecker>));
-    expect(screen.getByTitle("error")).toHaveTextContent('Something wrong!');
+    await act( async () => render(<ContrastChecker color="@sddf4" name="test"></ContrastChecker>));
+    expect(screen.getByTitle("error")).toHaveTextContent('Insert a correct hex color!');
 });
 
 it("renders element without crashing", async () => {
-    await act( async () => render(<ContrastChecker color={mockData.Hex}></ContrastChecker>));
+    await act( async () => render(<ContrastChecker color={mockData.Hex} name={mockData.name}></ContrastChecker>));
 });
 
 it("renders the correct centent", async () => {
-    await act( async () => render(<ContrastChecker color={mockData.Hex}></ContrastChecker>));
-    expect(screen.getByTitle("nameColor")).toHaveTextContent(mockData.Hex);
+    await act( async () => render(<ContrastChecker color={mockData.Hex} name={mockData.name}></ContrastChecker>));
+    expect(screen.getByTitle("nameColor")).toHaveTextContent(mockData.name);
     expect(screen.getByTitle("hexColor")).toHaveTextContent(mockData.Hex);
 });
 
 it("renders the correct colors", async () => {
-    await act( async () => render(<ContrastChecker color={mockData.Hex}></ContrastChecker>));
+    await act( async () => render(<ContrastChecker color={mockData.Hex} name={mockData.name}></ContrastChecker>));
     
     await waitFor(() => screen.getByTitle('rgbColor'));
     await waitFor(() => screen.getByTitle('cmykColor'));
@@ -49,7 +50,7 @@ it("renders the correct colors", async () => {
 });
 
 it("renders with correct way", async () => {
-    render(<ContrastChecker color={mockData.Hex}></ContrastChecker>);
+    render(<ContrastChecker color={mockData.Hex} name={mockData.name}></ContrastChecker>);
 
     expect(screen.getByTitle("loading")).toBeTruthy()
 

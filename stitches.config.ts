@@ -247,7 +247,7 @@ const stitches = createCss({
 export type CSS = StitchesCss<typeof stitches>;
 export const { styled, css, theme, getCssString, global, keyframes, config } = stitches;
 export const utils = config.utils;
-export const globalStyles = (mediaArray) => global({
+export const globalStyles = (mediaArray: any) => global({
   '@font-face': mediaArray,
   ':root' : {
     fontSize: '53.125%', // 0.85% 1rem at 10px

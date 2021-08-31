@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Crad, HeaderCrad, BodyCrad, LoadingCard, RatioTest } from "./components/components";
 import { CheckerProps } from "./models/CheckerProps";
 
-export const ContrastChecker = (props: { color: string}) => {
+export const ContrastChecker = (props: { color: string, name: string | null}) => {
 
   let object: CheckerProps = { 
     Hex: props.color,
     Rgb: '',
     Cmyk: '',
     Pantone: '',
-    DarkRatio: '',
-    LightRatio: '',
+    DarkRatio: false,
+    LightRatio: false,
   };
 
   let [loading, setLoading] = useState<boolean>(true);
@@ -32,7 +32,7 @@ export const ContrastChecker = (props: { color: string}) => {
       .then(response => response.json())
       .then(response => {
         try {
-          if (response && response.Rgb && response.Cmyk && response.LightRatio && response.DarkRatio) {  
+          if (response && response.Rgb && response.Cmyk) {  
             setItem(response as CheckerProps);  
             setLoading(false);     
           }
@@ -46,29 +46,29 @@ export const ContrastChecker = (props: { color: string}) => {
       })
       .catch(err => {
         console.error(err);
-        setError(err);  
+        setError(err.message);  
       });
     }
     else {
-      setError('Something wrong!');  
+      setError('Insert a correct hex color!');  
     }
   }, []);
   
   return (
     <Crad>
       <HeaderCrad css={{ backgroundColor: item.Hex }}>
-        <h3 title="nameColor">{item.Hex}</h3>
+        <h3 title="nameColor">{props.name ?? item.Hex}</h3>
         <ul>
           <li className="dark">
             <p>Aa Bb Cc</p>
-            <RatioTest color={item.DarkRatio} title="darkRatio">
-              {item.DarkRatio}
+            <RatioTest color={item.DarkRatio ? 'fail' : 'pass'} title="darkRatio">
+              {item.DarkRatio ? 'fail' : 'pass'}
             </RatioTest>
           </li>
           <li className="light">
             <p>Aa Bb Cc</p>
-            <RatioTest color={item.LightRatio} title="lightRatio">
-              {item.LightRatio}
+            <RatioTest color={item.LightRatio ? 'fail' : 'pass'} title="lightRatio">
+                {item.LightRatio ? 'fail' : 'pass'}
             </RatioTest>
           </li>
         </ul>
@@ -97,7 +97,7 @@ export const ContrastChecker = (props: { color: string}) => {
         loading && 
         <LoadingCard title="loading">
           {
-            !error ? <div id="loading"></div> : <p title="error">Something wrong!</p>
+            !error ? <div id="loading"></div> : <p title="error">{error}</p>
           }
         </LoadingCard>
       }

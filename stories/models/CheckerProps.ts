@@ -3,7 +3,7 @@ export interface CheckerProps {
     Rgb: string | undefined;
     Cmyk: string | undefined;
     Pantone: string | undefined;
-    DarkRatio: string,
-    LightRatio: string,
+    DarkRatio: boolean,
+    LightRatio: boolean,
 
 }

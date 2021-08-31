@@ -91,7 +91,7 @@ const getCmykColorText = (c: number, m: number, y: number, k: number) => {
 const getRatioStatus = (foreground: any, background: any) => {
   const ratio = calculateRatio(foreground, background);
 
-  return ratio > 4.5 ? 'pass' : 'fail';
+  return ratio > 4.5 ? true : false;
 }
 
 type Data = {
@@ -99,8 +99,8 @@ type Data = {
   Rgb: string;
   Cmyk: string;
   Pantone: string;
-  DarkRatio: string;
-  LightRatio: string;
+  DarkRatio: boolean;
+  LightRatio: boolean;
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {

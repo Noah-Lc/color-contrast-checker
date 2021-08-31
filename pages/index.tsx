@@ -77,7 +77,7 @@ export default function Home() {
           <div>
             <div className="row">
               {
-              colors.map((color, index) => <ContrastChecker key={index} color={color}></ContrastChecker>
+              colors.map((color, index) => <ContrastChecker key={index} color={color} name={null}></ContrastChecker>
               )
               }
             </div>
