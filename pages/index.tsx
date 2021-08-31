@@ -1,17 +1,20 @@
 import Head from "next/head";
 import { useState } from "react";
-import { styled } from "../stitches.config";
+
+import { Main, Heading, Subtitle, ColorInput, Input, Button, Center } from '../stories/components/components'
+import { ContrastChecker } from '../stories/ContrastChecker'
 
 export default function Home() {
-  const [colors, setColors] = useState(['#000000']);
+  let [colors, setColors] = useState(['#000000']);
+  let [result, setResult] = useState(false);
 
-  const addColor = () => {
+  const onAddColor = () => {
     let items = Object.assign([], colors);
-    items.push('#00000');
+    items.push('#000000');
     setColors(items);
   }
 
-  const removeColor = (index: number) => {
+  const onRemoveColor = (index: number) => {
     let items = Object.assign([], colors);
     items.splice(index, 1);
     setColors(items);
@@ -24,6 +27,21 @@ export default function Home() {
     setColors(items);
   }
 
+  const onTestColors = () => {
+    let checker = colors.every(color => /^#([0-9A-F]{3}){1,2}$/i.test(color));
+
+    if (checker) {
+      setResult(true);
+    }
+    else {
+      alert('Oops, one of the color not correct!');
+    }
+  }
+
+  const onTestNewColors = () => {
+    setColors(['#000000']);
+    setResult(false);  
+  }
   return (
     <div>
       <Head>
@@ -40,87 +58,36 @@ export default function Home() {
           <Subtitle>
             A simple tool for calculating the contrast ratio between two HEX values. Based on WCAG 2.0 Level AA standards.
           </Subtitle>
-          {
-            colors.map((color, index) => 
-            <ColorInput key={index}>
-              <Input type="text" value={color} onChange={(event) => onChangeEvent(event, index)} />
-              <Button color="danger" onClick={() => removeColor(index)}>R</Button>
-            </ColorInput>)
-          }
-          <Button color="success" onClick={() => addColor()}>Add</Button>
-          <Button color="primary" onClick={() => addColor()}>Test</Button>
         </Main>
+        {
+          !result ? 
+          <div>
+            {
+              colors.map((color, index) => 
+              <ColorInput key={index}>
+                <Input type="text" value={color} onChange={(event) => onChangeEvent(event, index)} />
+                <Button color="danger" onClick={() => onRemoveColor(index)} disabled={colors.length <= 1}>R</Button>
+              </ColorInput>)
+            }
+            <Center>
+              <Button color="success" onClick={() => onAddColor()}>Add</Button>
+              <Button color="primary" onClick={() => onTestColors()}>Test</Button>
+            </Center>
+          </div>: 
+          <div>
+            <div className="row">
+              {
+              colors.map((color, index) => <ContrastChecker key={index} color={color}></ContrastChecker>
+              )
+              }
+            </div>
+            <br />
+            <Center>
+              <Button color="secondary" onClick={() => onTestNewColors()}>Back</Button>
+            </Center>
+          </div>
+        }
       </main>
     </div>
   );
 }
-
-export const Main = styled("div", {
-  margin: "auto",
-  textAlign: "center"
-});
-
-export const Heading = styled("h1", {
-  fontFamily: "$h4",
-  fontWeight: "$h5",
-  fontStyle: "$h5",
-  fontSize: "$h5",
-  lineHeight: "$h5",
-});
-
-export const Subtitle = styled("p", {
-  fontFamily: "$subtitle2",
-  fontWeight: "$subtitle2",
-  fontStyle: "$subtitle2",
-  fontSize: "$subtitle2",
-  lineHeight: "$subtitle2",
-});
-
-export const ColorInput = styled("div", {
-  margin: "10px auto",
-  maxWidth: "320px",
-  '& Input': {
-    borderRight: "0",
-    borderTopRightRadius: "0",
-    borderBottomRightRadius: "0"
-  },
-  '& Button': {
-    borderLeft: "0",
-    borderTopLeftRadius: "0",
-    borderBottomLeftRadius: "0",
-  },
-});
-
-export const Input = styled("input", {
-  padding: '.375rem .75rem',
-  fontSize: '1.2rem',
-  border: "1px solid #ced4da",
-});
-
-export const Button = styled("button", {
-  padding: '.375rem .75rem',
-  fontSize: '1.2rem',
-  border: "1px solid #ced4da",
-  borderRadius: ".25rem",
-  cursor: "pointer",
-  variants: {
-    color: {
-      primary: {
-        backgroundColor: '$pri',
-        color: 'white'
-      },
-      secondary: {
-        backgroundColor: '$sec',
-        color: 'white'
-      },
-      success: {
-        backgroundColor: '$suc',
-        color: 'white'
-      },
-      danger: {
-        backgroundColor: '$ale',
-        color: 'white'
-      },
-    },
-  },
-});
